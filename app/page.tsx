@@ -17,12 +17,13 @@ import { catchError } from "./_utils/catchError";
 
 const domain = process.env.NEXT_PUBLIC_SHORT_LINK;
 
+const clientLocal = typeof window !== "undefined" ? localStorage : undefined 
 export default function Home() {
   const [shortLink, setShortLink] = useState<
     (IShortUrlData & { editMode?: boolean })[]
   >(
-    localStorage.getItem("linkStorage")
-      ? JSON.parse(localStorage.getItem("linkStorage")!)
+    clientLocal?.getItem("linkStorage")
+      ? JSON.parse(clientLocal.getItem("linkStorage")!)
       : []
   );
   const [loading, setLoading] = useState(false);
