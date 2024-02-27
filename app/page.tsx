@@ -171,7 +171,7 @@ export default function Home() {
             <S.ShortBody>
               {shortLink.length ? (
                 shortLink.map((el) => (
-                  <S.LinkContainer>
+                  <S.LinkContainer key={el.id}>
                     <S.ActionsCont>
                       <div>
                         <b>
