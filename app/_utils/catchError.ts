@@ -1,11 +1,15 @@
-import { AxiosError } from "axios"
+import { AxiosError } from "axios";
 interface ErrorMessage {
-	message: string,
-	error: string,
-	statusCode: number
+  message: string;
+  error: string;
+  statusCode: number;
 }
-export function catchError(error: unknown) {
-  const err = error as AxiosError<ErrorMessage>
-  
-  return err.response?.data.message
+export function catchError(error: unknown, handleError?: undefined): string;
+export function catchError(error: unknown, handleError: true): AxiosError<ErrorMessage>;
+export function catchError(error: unknown, handleError?: boolean) {
+  const err = error as AxiosError<ErrorMessage>;
+  if (!handleError) {
+    return err.response?.data.message;
+  }
+  return err
 }
