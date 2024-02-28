@@ -4,7 +4,7 @@ import { catchError } from "../_utils/catchError";
 
 export const getLink = async (id: string): Promise<{fullUrl?: string; code?:number}> => {
   try {
-    const res = await api.get(`${id}`);
+    const res = await api.get(id);
     const data = res.data as { fullUrl: string };
     return data;
   } catch (e) {
