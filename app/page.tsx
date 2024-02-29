@@ -15,7 +15,10 @@ import { catchError } from "./_utils/catchError";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import styles from "./styles.module.scss"
-const domain = window?.location.host;
+const localWindow = typeof window !== 'undefined' ? window : undefined
+
+const domain =  typeof window !== "undefined" && window?.location.host;
+
 
 const schema = yup
   .object({
@@ -27,8 +30,8 @@ export default function Home() {
   const [shortLink, setShortLink] = useState<
     (IShortUrlData & { editMode?: boolean })[]
   >(
-    window?.localStorage?.getItem("linkStorage")
-      ? JSON.parse(window?.localStorage?.getItem("linkStorage")!)
+    localWindow?.localStorage?.getItem("linkStorage")
+      ? JSON.parse(localWindow?.localStorage?.getItem("linkStorage")!)
       : []
   );
   const [loading, setLoading] = useState(false);
