@@ -1,5 +1,4 @@
 "use client";
-import * as S from "./styles";
 import {
   Button,
   CircularProgress,
@@ -10,31 +9,48 @@ import { api } from "./_services/api";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { IShortUrlData } from "./_interfaces/shortData";
-import Image from "next/image";
 import { toast } from "react-toastify";
 import { FaCheck, FaChevronRight, FaRegCopy, FaRegEdit } from "react-icons/fa";
 import { catchError } from "./_utils/catchError";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import styles from "./styles.module.scss"
+const domain = window?.location.host;
 
-const domain = process.env.NEXT_PUBLIC_SHORT_LINK;
+const schema = yup
+  .object({
+    linkInput: yup.string().url("Must be a valid url").required("This field is required"),
+  })
+  .required();
 
-const clientLocal = typeof window !== "undefined" ? localStorage : undefined 
 export default function Home() {
   const [shortLink, setShortLink] = useState<
     (IShortUrlData & { editMode?: boolean })[]
   >(
-    clientLocal?.getItem("linkStorage")
-      ? JSON.parse(clientLocal.getItem("linkStorage")!)
+    window?.localStorage?.getItem("linkStorage")
+      ? JSON.parse(window?.localStorage?.getItem("linkStorage")!)
       : []
   );
   const [loading, setLoading] = useState(false);
+
   const linkForm = useForm<{
     linkInput: string;
-    [linkEdit: `linkEdit.${string}`]: string;
   }>({
     defaultValues: {
       linkInput: "",
     },
+    resolver: yupResolver(schema),
   });
+  const linkFormErrors = linkForm.formState.errors;
+
+  const editForm = useForm<{
+    linksId: { [linkEdit: `linkEdit.${string}`]: string };
+  }>({
+    defaultValues: {
+      linksId: {},
+    },
+  });
+  const editFormErrors = editForm.formState.errors;
 
   const media650 = useMediaQuery("(min-width:650px)");
 
@@ -75,7 +91,7 @@ export default function Home() {
       return;
     }
 
-    const input = linkForm.getValues(`linkEdit.${id}`);
+    const input = editForm.getValues(`linksId.linkEdit.${id}`);
 
     if (currentName === input) {
       copy[index].editMode = false;
@@ -111,16 +127,16 @@ export default function Home() {
 
   return (
     <main>
-      <S.Navbar>
+      <nav className={styles.navBar}>
         <h2>
           Short<span>URL</span>
         </h2>
-      </S.Navbar>
+      </nav>
 
-      <S.Container>
-        <S.ShortUrl>
-          <S.ShortContent>
-            <S.ShortHead>
+      <div className={styles.container}>
+        <div className={styles.shortUrl}>
+          <div className={styles.shortContent}>
+            <div className={styles.shortHead}>
               <Controller
                 control={linkForm.control}
                 name="linkInput"
@@ -152,7 +168,7 @@ export default function Home() {
                 }}
                 disableElevation
                 variant="contained"
-                onClick={getShortLink}
+                onClick={linkForm.handleSubmit(getShortLink)}
                 disabled={loading}
               >
                 {!loading ? (
@@ -167,27 +183,32 @@ export default function Home() {
                   <CircularProgress />
                 )}
               </Button>
-            </S.ShortHead>
-
-            <S.ShortBody>
+            </div>
+            <p className={styles.errorMessage}>
+              {linkFormErrors.linkInput?.message}
+            </p>
+            <div className={styles.shortBody}>
               {shortLink.length ? (
                 shortLink.map((el) => (
-                  <S.LinkContainer key={el.id}>
-                    <S.ActionsCont>
+                  <div className={styles.linkContainer} key={el.id}>
+                    <div className={styles.actionsCont}>
                       <div>
                         <b>
                           {domain}/
                           {el.editMode ? (
                             <input
-                              {...linkForm.register(`linkEdit.${el.id}`)}
+                              {...editForm.register(
+                                `linksId.linkEdit.${el.id}`
+                              )}
                               defaultValue={el.shortLink}
+                              className={styles.editInput}
                             />
                           ) : (
                             <>{el.shortLink}</>
                           )}
                         </b>
-
-                        <S.PcButton
+                        <button
+                          className={styles.pcButton}
                           onClick={() => {
                             navigator.clipboard.writeText(
                               `https://${domain}/${el.shortLink}`
@@ -196,19 +217,19 @@ export default function Home() {
                           }}
                         >
                           <FaRegCopy />
-                        </S.PcButton>
+                        </button>
                       </div>
-
-                      <S.PcButton
+                      <button
+                        className={styles.pcButton}
                         onClick={() =>
                           handleEdit(el.id, el.shortLink, el.editMode)
                         }
                       >
                         {el.editMode ? <FaCheck /> : <FaRegEdit />}
-                      </S.PcButton>
-
-                      <S.MobileButton
-                        color={el.editMode ? "#1E962A" : "#e08c2b"}
+                      </button>
+                      <button
+                        className={styles.mobileButton}
+                        style={{ backgroundColor: el.editMode ? "#1E962A" : "#e08c2b" }}
                         onClick={() =>
                           handleEdit(el.id, el.shortLink, el.editMode)
                         }
@@ -222,9 +243,10 @@ export default function Home() {
                             Edit <FaRegEdit />
                           </>
                         )}
-                      </S.MobileButton>
-                      <S.MobileButton
-                        color="#197ad2"
+                      </button>
+                      <button
+                        className={styles.mobileButton}
+                        style={{ backgroundColor: "#197ad2" }}
                         onClick={() => {
                           navigator.clipboard.writeText(
                             `https://${domain}/${el.shortLink}`
@@ -233,11 +255,10 @@ export default function Home() {
                         }}
                       >
                         Copy Link <FaRegCopy />
-                      </S.MobileButton>
-                    </S.ActionsCont>
-
+                      </button>
+                    </div>
                     <p>
-                      <Image
+                      <img
                         src={`https://www.google.com/s2/favicons?domain=${
                           new URL(el.fullLink).host
                         }`}
@@ -247,15 +268,15 @@ export default function Home() {
                       />
                       <span>{el.fullLink}</span>
                     </p>
-                  </S.LinkContainer>
+                  </div>
                 ))
               ) : (
                 <></>
               )}
-            </S.ShortBody>
-          </S.ShortContent>
-        </S.ShortUrl>
-      </S.Container>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }
