@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, Patrick_Hand } from "next/font/google";
-import StyledComponentsRegistry from "../lib/registry";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -27,7 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} ${patrick_hand.variable}`}>
         <ToastContainer draggable closeOnClick theme="colored"/>
-        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        {children}
       </body>
     </html>
   );
