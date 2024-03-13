@@ -1,124 +1,160 @@
 .navBar {
-    background-color: #fff;
-    text-align: center;
+  background-color: #fff;
+  text-align: center;
+  padding: 10px;
+
+  h2 {
+    font-family: var(--patrick-hand), monospace;
+    font-size: 2rem;
+
+    span {
+      color: #00c0ff;
+    }
+  }
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.shortUrl {
+  background-color: #fff;
+  padding: 20px;
+  max-width: 1500px;
+  width: 900px;
+  border-radius: 6px;
+  margin: 0 10px;
+  min-width: 0px;
+
+  @media only screen and (max-width: 650px) {
     padding: 10px;
-  
-    h2 {
-      font-family: var(--patrick-hand), monospace;
-      font-size: 2rem;
-  
-      span {
-        color: #00c0ff;
-      }
-    }
   }
-  
-  .container {
-    display: flex;
-    justify-content: center;
-    padding-top: 20px;
-    width: 100%;
-  }
-  
-  .shortUrl {
-    background-color: #fff;
-    padding: 20px;
-    max-width: 1500px;
-    width: 900px;
-    border-radius: 6px;
-    margin: 0 10px;
-    min-width: 0px;
-    @media only screen and (max-width: 650px) {
-      padding: 10px;
-    }
-  }
-  
-  .shortContent {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .shortHead {
-    display: flex;
-  }
-  
-  .errorMessage {
-    color: #f00;
-    font-weight: bold;
-  }
-  
-  .shortBody {}
-  
-  .linkContainer {
-    background-color: #71bef1a6;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 6px;
-    p {
-      display: flex;
-      align-items: center;
-      margin-top: 10px;
-      span {
-        margin-left: 5px;
-        max-width: 90%;
-        overflow-wrap: break-word;
-      }
-    }
-  
-    b {
-      display: flex;
-      color: #073079;
-    }
-  
-    @media only screen and (max-width: 650px) {
-      p {
-        display: none;
-      }
-    }
-  }
-  
-  .actionsCont {
+}
+
+.shortContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.shortHead {
+  display: flex;
+  justify-content: center;
+}
+
+.errorMessage {
+  color: #f00;
+  font-weight: bold;
+}
+
+.shortBody {}
+
+.linkContainer {
+  background-color: #71bef1a6;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 6px;
+
+  p {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    div {
-      display: flex;
-    }
-  
-    @media only screen and (max-width: 650px) {
-      flex-direction: column;
-      justify-content: left;
-      align-items: flex-start;
+    margin-top: 10px;
+
+    span {
+      margin-left: 5px;
+      max-width: 90%;
+      overflow-wrap: break-word;
     }
   }
-  
-  .pcButton {
+
+  b {
     display: flex;
-    background: none;
-    border: none;
-    margin-left: 8px;
-    font-size: 17px;
-    cursor: pointer;
-    @media only screen and (max-width: 650px) {
+    color: #073079;
+  }
+
+  @media only screen and (max-width: 650px) {
+    p {
       display: none;
     }
   }
-  
-  .mobileButton {
-    display: none;
-    @media only screen and (max-width: 650px) {
-      display: flex;
-      width: 100%;
-      padding: 5px 0;
-      justify-content: center;
-      margin-top: 15px;
-      border: none;
-      border-radius: 6px;
-      color: #fff;
-      font-weight: bold;
-      svg {
-        margin-left: 5px;
-      }
-      transition: all 300ms;
-    }
+}
+
+.actionsCont {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  div {
+    display: flex;
   }
+
+  @media only screen and (max-width: 650px) {
+    flex-direction: column;
+    justify-content: left;
+    align-items: flex-start;
+  }
+}
+
+.pcButton {
+  display: flex;
+  background: none;
+  border: none;
+  margin-left: 8px;
+  font-size: 17px;
+  cursor: pointer;
+
+  @media only screen and (max-width: 650px) {
+    display: none;
+  }
+}
+
+.mobileButton {
+  display: none;
+
+  @media only screen and (max-width: 650px) {
+    display: flex;
+    width: 100%;
+    padding: 5px 0;
+    justify-content: center;
+    margin-top: 15px;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: bold;
+
+    svg {
+      margin-left: 5px;
+    }
+
+    transition: all 300ms;
+  }
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #073079;
+  text-align: center;
+  padding: 15px 0;
+  margin-top: 30px;
+  color: #fff;
+
+  svg {
+    color: #e31b23;
+  }
+
+  p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+  }
+
+  a {
+    color: #71bef1;
+    text-decoration: underline;
+  }
+}
