@@ -10,30 +10,35 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { IShortUrlData } from "./_interfaces/shortData";
 import { toast } from "react-toastify";
-import { FaCheck, FaChevronRight, FaRegCopy, FaRegEdit } from "react-icons/fa";
+import {
+  FaCheck,
+  FaChevronRight,
+  FaHeart,
+  FaRegCopy,
+  FaRegEdit,
+} from "react-icons/fa";
 import { catchError } from "./_utils/catchError";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import styles from "./styles.module.scss"
-const localWindow = typeof window !== 'undefined' ? window : undefined
+import styles from "./styles.module.scss";
+import useHasMounted from "./_hooks/useHasMounted";
 
-const domain =  typeof window !== "undefined" && window?.location.host;
-
+const domain = typeof window !== "undefined" && window?.location.host;
 
 const schema = yup
   .object({
-    linkInput: yup.string().url("Must be a valid url").required("This field is required"),
+    linkInput: yup
+      .string()
+      .url("Must be a valid url")
+      .required("This field is required"),
   })
   .required();
 
 export default function Home() {
   const [shortLink, setShortLink] = useState<
     (IShortUrlData & { editMode?: boolean })[]
-  >(
-    localWindow?.localStorage?.getItem("linkStorage")
-      ? JSON.parse(localWindow?.localStorage?.getItem("linkStorage")!)
-      : []
-  );
+  >([]);
+  const hasMounted = useHasMounted();
   const [loading, setLoading] = useState(false);
 
   const linkForm = useForm<{
@@ -125,8 +130,16 @@ export default function Home() {
   };
 
   useEffect(() => {
-    localStorage.setItem("linkStorage", JSON.stringify(shortLink));
+    if (shortLink.length) {
+      localStorage.setItem("linkStorage", JSON.stringify(shortLink));
+    }
   }, [shortLink]);
+
+  useEffect(() => {
+    if (window.localStorage.getItem("linkStorage")) {
+      setShortLink(JSON.parse(window.localStorage.getItem("linkStorage")!));
+    }
+  }, []);
 
   return (
     <main>
@@ -140,52 +153,58 @@ export default function Home() {
         <div className={styles.shortUrl}>
           <div className={styles.shortContent}>
             <div className={styles.shortHead}>
-              <Controller
-                control={linkForm.control}
-                name="linkInput"
-                render={({ field }) => (
-                  <TextField
-                    placeholder="https://www.google.com"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    sx={{
-                      ".MuiInputBase-root": {
-                        height: "100%",
-                      },
-                      fieldset: {
-                        borderTopRightRadius: 0,
-                        borderBottomRightRadius: 0,
-                      },
-                    }}
-                    {...field}
+              {!hasMounted ? (
+                <CircularProgress />
+              ) : (
+                <>
+                  <Controller
+                    control={linkForm.control}
+                    name="linkInput"
+                    render={({ field }) => (
+                      <TextField
+                        placeholder="https://www.google.com"
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        sx={{
+                          ".MuiInputBase-root": {
+                            height: "100%",
+                          },
+                          fieldset: {
+                            borderTopRightRadius: 0,
+                            borderBottomRightRadius: 0,
+                          },
+                        }}
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
-              <Button
-                sx={{
-                  borderTopLeftRadius: 0,
-                  borderBottomLeftRadius: 0,
-                  flexBasis: "25%",
-                  padding: 0,
-                }}
-                disableElevation
-                variant="contained"
-                onClick={linkForm.handleSubmit(getShortLink)}
-                disabled={loading}
-              >
-                {!loading ? (
-                  media650 ? (
-                    "Shorten url"
-                  ) : (
-                    <>
-                      <FaChevronRight />
-                    </>
-                  )
-                ) : (
-                  <CircularProgress />
-                )}
-              </Button>
+                  <Button
+                    sx={{
+                      borderTopLeftRadius: 0,
+                      borderBottomLeftRadius: 0,
+                      flexBasis: "25%",
+                      padding: 0,
+                    }}
+                    disableElevation
+                    variant="contained"
+                    onClick={linkForm.handleSubmit(getShortLink)}
+                    disabled={loading}
+                  >
+                    {!loading ? (
+                      media650 ? (
+                        "Shorten url"
+                      ) : (
+                        <>
+                          <FaChevronRight />
+                        </>
+                      )
+                    ) : (
+                      <CircularProgress />
+                    )}
+                  </Button>
+                </>
+              )}
             </div>
             <p className={styles.errorMessage}>
               {linkFormErrors.linkInput?.message}
@@ -232,7 +251,9 @@ export default function Home() {
                       </button>
                       <button
                         className={styles.mobileButton}
-                        style={{ backgroundColor: el.editMode ? "#1E962A" : "#e08c2b" }}
+                        style={{
+                          backgroundColor: el.editMode ? "#1E962A" : "#e08c2b",
+                        }}
                         onClick={() =>
                           handleEdit(el.id, el.shortLink, el.editMode)
                         }
@@ -280,6 +301,19 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <footer className={styles.footer}>
+        <p>
+          Made With <FaHeart /> By{" "}
+          <a
+            href="https://github.com/Lcs01-dev"
+            target="_blank"
+            rel="noreferrer"
+          >
+            lcs-dev
+          </a>
+        </p>
+      </footer>
     </main>
   );
 }
