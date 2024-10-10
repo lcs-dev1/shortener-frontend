@@ -11,7 +11,7 @@ export default async function Page({ params }: { params: { urlId: string } }) {
       <div className={styles.containerError}>
         <h2>OOOOPS!</h2>
         <h1>404</h1>
-        <p>We didn&apos;t find the page you&apos;re looking for!</p>
+        <p>We didn&apos;t find the link you&apos;re looking for!</p>
       </div>
     );
   }
