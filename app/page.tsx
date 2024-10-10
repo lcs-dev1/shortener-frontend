@@ -142,7 +142,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main>
+    <main className={styles.mainContainer}>
       <nav className={styles.navBar}>
         <h2>
           Short<span>URL</span>
@@ -211,7 +211,7 @@ export default function Home() {
             </p>
             <div className={styles.shortBody}>
               {shortLink.length ? (
-                shortLink.map((el) => (
+                shortLink.reverse().map((el) => (
                   <div className={styles.linkContainer} key={el.id}>
                     <div className={styles.actionsCont}>
                       <div>
