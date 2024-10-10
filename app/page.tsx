@@ -78,7 +78,7 @@ export default function Home() {
 
       const data = res.data as IShortUrlData;
 
-      setShortLink((prev) => [...prev, data]);
+      setShortLink((prev) => [data,...prev]);
     } catch (e) {
       toast.error("An error occurred when trying to shorten the URL");
     } finally {
@@ -211,7 +211,7 @@ export default function Home() {
             </p>
             <div className={styles.shortBody}>
               {shortLink.length ? (
-                shortLink.reverse().map((el) => (
+                shortLink.map((el) => (
                   <div className={styles.linkContainer} key={el.id}>
                     <div className={styles.actionsCont}>
                       <div>
