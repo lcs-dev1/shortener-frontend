@@ -306,7 +306,7 @@ export default function Home() {
         <p>
           Made With <FaHeart /> By{" "}
           <a
-            href="https://github.com/Lcs01-dev"
+            href="https://github.com/Lcs-dev1"
             target="_blank"
             rel="noreferrer"
           >
